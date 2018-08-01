@@ -38,7 +38,7 @@ class Poems(Singleton):
         if not check_uptodate(poems_path):
             _gen_poems()
         self.poems = []
-        with open(poems_path, 'r') as fin:
+        with open(poems_path, 'r', encoding="UTF-8") as fin:
             for line in fin.readlines():
                 self.poems.append(line.strip().split())
 

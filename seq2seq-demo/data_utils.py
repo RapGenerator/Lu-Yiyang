@@ -19,8 +19,8 @@ def gen_train_data():
     plan_data = []
     gen_data = []
     for poem in poems:
-        if len(poem) != 4:
-            continue # Only consider quatrains.
+        # if len(poem) != 4:
+        #     continue # Only consider quatrains.
         valid = True
         context = start_of_sentence()
         gen_lines = []

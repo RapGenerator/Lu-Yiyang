@@ -31,4 +31,3 @@ if __name__ == '__main__':
             generator = Generator()
             generator.train(n_epochs = 1000)
         print("All training is done!")
-
