@@ -1,10 +1,15 @@
-所有运行环境均为：Python3.6+Tensorflow1.9
+所有运行环境均为：
+
+    Python3.6
+    Tensorflow1.9
 
 目前包含：
+
     一个Char RNN demo
     一个seq2seq demo（已经准备删除）
 
 每日进展：
+
     2018年08月02日：
         学习seq2seq+attention的代码（来自庞云升）
         与王德瑞导师会面，明确当前问题与未来计划。
