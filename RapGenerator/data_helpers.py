@@ -20,45 +20,60 @@ def load_and_cut_data(filepath):
     :param filepath: 路径
     :return: data: 分词后的数据
     '''
+    #filepath指定了需要读取的文件的路径，'r'表示以只读方式打开，'encoding'指明了文件的编码方式
     with open(filepath, 'r', encoding='UTF-8') as f:
-        data = []
-        lines = f.readlines()
-        for line in lines:
+        data = [] #创建一个列表
+        lines = f.readlines() #读取文件，将文件的每一行作为列表lines中的一个元素存储
+        for line in lines: #遍历每一行
+            #jieba是一个中文分词工具
+            #jieba.cut的第一个参数是需要分词的字符串，cut_all指定是否需要全模式分词
+            #全模式分词指是否每种可能的词都取出来，比如："我来到北京清华大学"
+            #全模式分词结果：我/ 来到/ 北京/ 清华/ 清华大学/ 华大/ 大学
+            #默认模式分词结果：我/ 来到/ 北京/ 清华大学
+            #string.strip()的功能是删除字符串开头和结尾的[空格][tab][回车][换行]
             seg_list = jieba.cut(line.strip(), cut_all=False)
-            cutted_line = [e for e in seg_list]
-            data.append(cutted_line)
+            cutted_line = [e for e in seg_list] #将分词完毕的一行词语列表保存
+            data.append(cutted_line) #将分词完毕的词语列表加到data的最后
     return data
 
 
 def create_dic_and_map(sources, targets):
     '''
     得到输入和输出的字符映射表
-    :param sources:
-           targets:
-    :return: sources_data:
-             targets_data:
-             word_to_id: 字典，数字到数字的转换
-             id_to_word: 字典，数字到汉字的转换
+    :param sources: 分词之后的source词语列表
+           targets: 分词之后的target词语列表
+    :return: sources_data: 将词语映射为id后的source列表
+             targets_data: 将词语映射为id后的target列表
+             word_to_id: 字典，词语到数字的转换
+             id_to_word: 字典，数字到词语的转换
     '''
+    #设置四种特殊词语，分别是：填充、未知词语、句子开头、每行结束
     special_words = ['<PAD>', '<UNK>', '<GO>', '<EOS>']
 
     # 得到每次词语的使用频率
-    word_dic = {}
-    for line in (sources + targets):
-        for character in line:
+    word_dic = {} #创建一个dict
+    for line in (sources + targets): #将sources和targets连接在一起，遍历其中的所有行
+        for character in line: #遍历一行中的所有词语
+            #dict.get()方法返回对应键的值，第一个参数是需要找的键，第二个参数是找不到该键时的默认返回值
+            #将word_dic词典中的对应词语的出现次数+1
             word_dic[character] = word_dic.get(character, 0) + 1
 
     # 去掉使用频率为1的词
-    word_dic_new = []
+    word_dic_new = [] #创建一个list
+    #遍历词典word_dic中的每一组键值对，dict.items()方法返回词典中可遍历的(键,值)元组数组
     for key, value in word_dic.items():
-        if value > 1:
-            word_dic_new.append(key)
+        if value > 1: #对于只出现过一次的词语，忽略之
+            word_dic_new.append(key) #将出现了两次及以上的词语添加到list word_dic_new的末尾
 
     # 将字典中的汉字/英文单词映射为数字
+    #enumerate()函数用于将一个可遍历的数据对象(如列表、元组或字符串)组合为一个索引序列，同时列出数据和数据下标
+    #枚举每一个特殊词和出现两次及以上的词语，创建一个id到词语的映射，储存在dict中
     id_to_word = {idx: word for idx, word in enumerate(special_words + word_dic_new)}
+    #反向创建一个词语到id的映射，存储在dict中
     word_to_id = {word: idx for idx, word in id_to_word.items()}
 
-    # 将sources和targets中的汉字/英文单词映射为数字
+    #将sources和targets中的每一行中的每一个汉字/英文单词映射为id
+    #如果词库中不含有这个词语，就将id设置为UNK的id
     sources_data = [[word_to_id.get(character, word_to_id['<UNK>']) for character in line] for line in sources]
     targets_data = [[word_to_id.get(character, word_to_id['<UNK>']) for character in line] for line in targets]
 
@@ -150,13 +165,3 @@ if __name__ == '__main__':
             print(nexBatch.decoder_targets)
             print(nexBatch.decoder_targets_length)
         temp += 1
-
-
-
-
-
-
-
-
-
-
