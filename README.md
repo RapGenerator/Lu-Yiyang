@@ -6,9 +6,13 @@
 目前包含：
 
     一个Char RNN demo
-    一个seq2seq demo（已经准备删除）
+    一个包含详细注解的seq2seq demo
 
 每日进展：
+
+    2018年08月06日：
+        与王德瑞导师会面，讨论当前进展。
+        继续注解seq2seq代码。
 
     2018年08月03日：
         调试seq2seq+attention的代码（来自伊玮雯），失败。
