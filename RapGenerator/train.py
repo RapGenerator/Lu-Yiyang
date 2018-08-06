@@ -2,19 +2,19 @@
 #  _*_ coding:utf-8 _*_
 
 import tensorflow as tf
-from data_helpers import *
+from data_helpers import load_and_cut_data, create_dic_and_map, getBatches
 from model import Seq2SeqModel
 import math
 
 if __name__ == '__main__':
 
     # 超参数
-    rnn_size = 1024 #设置RNN中隐藏状态h的维度
-    num_layers = 2 #设置RNN中的层数
-    embedding_size = 1024 #设置embedding向量的维度
+    rnn_size = 256 #设置RNN中隐藏状态h的维度
+    num_layers = 4 #设置RNN中的层数
+    embedding_size = 256 #设置embedding向量的维度
     batch_size = 128 #设置batch_size
-    learning_rate = 0.0001 #设置学习率
-    epochs = 5000 #设置所有数据经过多少次网络
+    learning_rate = 0.001 #设置学习率
+    epochs = 100 #设置所有数据经过多少次网络
     sources_txt = 'data/sources.txt' #设置sources文件的路径
     targets_txt = 'data/targets.txt' #设置targets文件的路径
     model_dir = 'model/' #设置网络模型参数的保存路径

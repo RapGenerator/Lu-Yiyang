@@ -3,7 +3,7 @@
 
 import tensorflow as tf
 import numpy as np
-from data_helpers import *
+from data_helpers import load_and_cut_data, create_dic_and_map, sentence2enco
 from model import Seq2SeqModel
 import sys
 

@@ -62,7 +62,8 @@ def create_dic_and_map(sources, targets):
     word_dic_new = [] #创建一个list
     #遍历词典word_dic中的每一组键值对，dict.items()方法返回词典中可遍历的(键,值)元组数组
     for key, value in word_dic.items():
-        if value > 1: #对于只出现过一次的词语，忽略之
+        #if value > 1: #对于只出现过一次的词语，忽略之
+        if value > 0: #这里尝试将只出现过一次的词语也加入词库
             word_dic_new.append(key) #将出现了两次及以上的词语添加到list word_dic_new的末尾
 
     # 将字典中的汉字/英文单词映射为数字
