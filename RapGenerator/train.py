@@ -22,13 +22,13 @@ if __name__ == '__main__':
     beam_size = 3 # 设置beam_search中的beam_size
     cell_type = 'LSTM' # 设置RNNcell的类型
     max_gradient_norm = 5.0 # 设置梯度截断的最大梯度值，若是梯度过大，将其截断到设置的最大梯度值
-    teacher_forcing = True # 设置是否使用tercher_forcing
+    teacher_forcing = False # 设置是否使用tercher_forcing
     teacher_forcing_probability = 0.5 # 设置teacher_forcing中使用target或是output的概率
 
     batch_size = 32  # 设置batch_size
     epochs = 40 # 设置所有数据经过多少次网络
     display = 100 # 设置训练多少个batch后打印一遍loss
-    pretrained = True # 设置是否使用之前训练过的模型参数
+    pretrained = False # 设置是否使用之前训练过的模型参数
     sources_txt = 'data/sources.txt' # 设置sources文件的路径
     targets_txt = 'data/targets.txt' # 设置targets文件的路径
     model_dir = 'model/' # 设置网络模型参数的保存路径

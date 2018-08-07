@@ -182,7 +182,6 @@ if __name__ == '__main__':
 
     sources_txt = 'data/sources.txt' # 设定sources文件路径
     targets_txt = 'data/targets.txt' # 设定targets文件路径
-    keep_rate = 0.6 # 似乎并没用用到？？？
     batch_size = 128 # 设定batch_size
 
     # 得到分词后的sources和targets，具体方法进入load_and_cut_data查看
