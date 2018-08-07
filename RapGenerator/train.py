@@ -6,7 +6,9 @@ from data_helpers import load_and_cut_data, create_dic_and_map, getBatches
 from model import Seq2SeqModel
 import math
 
-
+# 如果这个.py文件是被直接执行的，那么__name__会被赋值为__main__
+# 如果这个.py文件是被import的，那么__name__会被赋值为import它的.py文件名
+# 也就是说，当这个train.py文件被直接运行的时候会进入这个if，被import时不进入
 if __name__ == '__main__':
 
     # 超参数
@@ -70,15 +72,22 @@ if __name__ == '__main__':
         else: # 从零开始训练模型
             sess.run(tf.global_variables_initializer())
 
-        for e in range(epochs):
+        for e in range(epochs): # 对于每一个epoch
             # 打印训练Epoch信息
             print("----- Epoch {}/{} -----".format(e + 1, epochs))
+            # 将一个epoch中的数据制作成一个个batch，具体方法进入data_helpers.py查看
             batches = getBatches(sources_data, targets_data, batch_size)
-            step = 0
-            for nextBatch in batches:
+            step = 0 # 记录训练了多少个batch
+            for nextBatch in batches: # 遍历batches中的每个batch
+                # 将这个batch的数据喂给网络进行训练
                 loss, summary = model.train(nextBatch)
-                if step % display == 0:
+                if step % display == 0: # 每隔display个batch打印一次训练信息
+                    # math.exp(x)返回e的x次方
+                    # inf表示正无穷
+                    # 计算困惑度
                     perplexity = math.exp(float(loss)) if loss < 300 else float('inf')
+                    # 打印loss和困惑度
                     print("----- Loss %.2f -- Perplexity %.2f" % (loss, perplexity))
-                step += 1
+                step += 1 # 计数，记录训练了多少个batch
+            # 保存当前网络模型参数
             model.saver.save(sess, model_dir + 'seq2seq.ckpt')

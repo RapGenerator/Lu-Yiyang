@@ -127,6 +127,7 @@ class Seq2SeqModel(object):
         print('Building train decoder...')
 
         # tf.strided_slice(data,begin,end,stride)是一个跨步切片操作，切片区间左闭右开
+        # 如果原来并不清楚，我在这里也讲不太清楚，也没找到一个特别好的网站解释，个人建议自己搜索一下
         # 本例中data为decoder_targets，对真实的下一句子进行切片，end中的-1会得到那一维度的最后一个
         # 得到的ending为一个batch中的一行行target句子
         ending = tf.strided_slice(self.decoder_targets, [0, 0], [self.batch_size, -1], [1, 1])
@@ -326,15 +327,18 @@ class Seq2SeqModel(object):
         self.train_op = optimizer.apply_gradients(zip(clip_gradients, trainable_params))
 
     def train(self, batch):
+        # 训练时需要喂给网络的数据
         feed_dict = {self.encoder_inputs: batch.encoder_inputs,
                      self.encoder_inputs_length: batch.encoder_inputs_length,
                      self.decoder_targets: batch.decoder_targets,
                      self.decoder_targets_length: batch.decoder_targets_length,
-                     self.keep_prob: 0.5,
+                     self.keep_prob: 0.5, # dropout时保留的几率
                      self.batch_size: len(batch.encoder_inputs)}
+        # 执行sess.run()，得到loss和summary
         _, loss, summary = self.sess.run([self.train_op, self.loss, self.summary_op], feed_dict=feed_dict)
         return loss, summary
 
+    # 似乎并没有用到
     def eval(self, batch):
         feed_dict = {self.encoder_inputs: batch.encoder_inputs,
                      self.encoder_inputs_length: batch.encoder_inputs_length,
@@ -346,9 +350,11 @@ class Seq2SeqModel(object):
         return loss, summary
 
     def infer(self, batch):
+        # 预测时喂给网络的数据
         feed_dict = {self.encoder_inputs: batch.encoder_inputs,
                      self.encoder_inputs_length: batch.encoder_inputs_length,
-                     self.keep_prob: 1.0,
+                     self.keep_prob: 1.0, # dropout的参数，在预测时不进行dropout，保留所有神经元
                      self.batch_size: len(batch.encoder_inputs)}
-        predict = self.sess.run([self.decoder_predict_decode], feed_dict=feed_dict)
+        # 执行sess.run()，得到预测出来的句子(此时还是id形式的)
+        predict = self.sess.run(self.decoder_predict_decode, feed_dict=feed_dict)
         return predict
