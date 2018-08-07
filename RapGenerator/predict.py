@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # 超参数
     rnn_size = 256 # 设置RNN中隐藏状态h的维度
-    num_layers = 2 # 设置RNN中的层数
+    num_layers = 4 # 设置RNN中的层数
     embedding_size = 256 # 设置embedding向量的维度
     learning_rate = 0.001 # 设置学习率
     mode = 'predict' # 设置训练或是预测
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     teacher_forcing = True # 设置是否使用tercher_forcing
     teacher_forcing_probability = 0.5 # 设置teacher_forcing中使用target或是output的概率
 
-    batch_size = 32 # 设置batch_size
+    batch_size = 128 # 设置batch_size
     sources_txt = 'data/sources.txt' # 设置sources文件的路径
     targets_txt = 'data/targets.txt' # 设置targets文件的路径
     model_dir = 'model/' # 设置网络模型参数的保存路径

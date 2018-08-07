@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     # 超参数
     rnn_size = 256 # 设置RNN中隐藏状态h的维度
-    num_layers = 2 # 设置RNN中的层数
+    num_layers = 4 # 设置RNN中的层数
     embedding_size = 256 # 设置embedding向量的维度
     learning_rate = 0.001 # 设置学习率
     mode = 'train' # 设置训练或是预测
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     teacher_forcing = False # 设置是否使用tercher_forcing
     teacher_forcing_probability = 0.5 # 设置teacher_forcing中使用target或是output的概率
 
-    batch_size = 32  # 设置batch_size
-    epochs = 40 # 设置所有数据经过多少次网络
+    batch_size = 128  # 设置batch_size
+    epochs = 800 # 设置所有数据经过多少次网络
     display = 100 # 设置训练多少个batch后打印一遍loss
     pretrained = False # 设置是否使用之前训练过的模型参数
     sources_txt = 'data/sources.txt' # 设置sources文件的路径
