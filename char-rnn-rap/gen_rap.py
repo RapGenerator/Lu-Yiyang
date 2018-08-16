@@ -117,10 +117,10 @@ class Model():
                 w = tf.get_variable(
                     'softmax_w', [args.state_size, data.vocab_size])
                 b = tf.get_variable('softmax_b', [data.vocab_size])
-                with tf.device("/cpu:0"):
-                    embedding = tf.get_variable(
-                        'embedding', [data.vocab_size, args.state_size])
-                    inputs = tf.nn.embedding_lookup(embedding, self.input_data)
+                # with tf.device("/cpu:0"):
+                embedding = tf.get_variable(
+                    'embedding', [data.vocab_size, args.state_size])
+                inputs = tf.nn.embedding_lookup(embedding, self.input_data)
             outputs, last_state = tf.nn.dynamic_rnn(
                 self.cell, inputs, initial_state=self.initial_state)
 
