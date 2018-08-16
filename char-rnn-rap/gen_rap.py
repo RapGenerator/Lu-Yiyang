@@ -19,18 +19,29 @@ from tensorflow.contrib import legacy_seq2seq as seq2seq
 class HParam():
 
     batch_size = 32
-    n_epoch = 100
+    n_epoch = 500
     learning_rate = 0.01
     decay_steps = 1000
     decay_rate = 0.9
     grad_clip = 5
 
-    state_size = 100
-    num_layers = 3
+    state_size = 256
+    num_layers = 4
     seq_length = 20
     log_dir = './logs'
     metadata = 'metadata.tsv'
-    gen_num = 500 # how many chars to generate
+    gen_num = 20 # how many chars to generate
+
+
+def pick_top_n(preds, vocab_size, top_n=5):
+    p = np.squeeze(preds)
+    # 将除了top_n个预测值的位置都置为0
+    p[np.argsort(p)[:-top_n]] = 0
+    # 归一化概率
+    p = p / np.sum(p)
+    # 随机选取一个字符
+    c = np.random.choice(vocab_size, 1, p=p)[0]
+    return c
 
 
 class DataGenerator():
@@ -195,28 +206,39 @@ def sample(data, model, args):
         saver.restore(sess, ckpt)
 
         # initial phrase to warm RNN
-        prime = u'你真skr人才'
+
+        # prime = u'你真skr人才'
+
+        sys.stdout.write("> ")
+        sys.stdout.flush()
+        prime = sys.stdin.readline()
+        prime = prime[:-1]
+
         state = sess.run(model.cell.zero_state(1, tf.float32))
 
-        for word in prime[:-1]:
-            x = np.zeros((1, 1))
-            x[0, 0] = data.char2id(word)
-            feed = {model.input_data: x, model.initial_state: state}
-            state = sess.run(model.last_state, feed)
+        x = np.zeros((1, 1))
+        x[0, 0] = data.char2id(prime)
+        feed = {model.input_data: x, model.initial_state: state}
+        state = sess.run(model.last_state, feed)
 
         word = prime[-1]
         lyrics = prime
+        print(lyrics, end='')
         for _ in range(args.gen_num):
             x = np.zeros([1, 1])
-            x[0, 0] = data.char2id(word)
+            x[0, 0] = data.char2id(prime)
             feed_dict = {model.input_data: x, model.initial_state: state}
             probs, state = sess.run([model.probs, model.last_state], feed_dict)
             p = probs[0]
-            word = data.id2char(np.argmax(p))
+
+            # word = data.id2char(np.argmax(p))
+            word = data.id2char(pick_top_n(p, data.vocab_size))
+            
             print(word, end='')
             sys.stdout.flush()
             time.sleep(0.05)
             lyrics += word
+            if word == '\n': break
         return lyrics
 
 
